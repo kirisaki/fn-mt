@@ -2,7 +2,11 @@
   "name": "fn-mt",
   "version": "1.0.0",
   "description": "functional implementation of Mersenne Twister",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "repository": "https://github.com/kirisaki/fn-mt",
   "author": "Akihito KIRISAKI <kirisaki@klaraworks.net>",
   "license": "BSD-3-Clause",
