@@ -10,7 +10,7 @@
   "repository": "https://github.com/kirisaki/fn-mt",
   "author": "Akihito KIRISAKI <kirisaki@klaraworks.net>",
   "license": "BSD-3-Clause",
-  "dependencies": {
+  "devDependencies": {
     "typescript": "^3.8.3"
   }
 }
