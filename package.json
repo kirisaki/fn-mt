@@ -1,6 +1,6 @@
 {
   "name": "fn-mt",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "functional implementation of Mersenne Twister",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
