@@ -12,5 +12,8 @@
   "license": "BSD-3-Clause",
   "devDependencies": {
     "typescript": "^3.8.3"
+  },
+  "scripts": {
+    "build": "tsc"
   }
 }
