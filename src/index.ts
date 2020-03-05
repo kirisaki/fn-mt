@@ -21,19 +21,23 @@ const A = 0x9908B0DF
 const B = 0x9D2C5680
 const C = 0xEFC60000
 
-const WHOLE_MASK = parseInt([...Array(W)].map(() => '1').reduce((x, y) => x + y), 2)
-const UPPER_MASK = parseInt([...Array(W - R)].map(() => '1').reduce((x, y) => x + y).concat([...Array(R)].map(() => '0').reduce((x, y) => x + y)), 2)
-const LOWER_MASK = parseInt([...Array(W - R)].map(() => '0').reduce((x, y) => x + y).concat([...Array(R)].map(() => '1').reduce((x, y) => x + y)), 2)
+const UPPER_MASK = parseInt([...Array(W - R)].map(() => '1').reduce((x, y) => x + y).concat([...Array(R)].map(() => '0').reduce((x, y) => x + y), ''), 2)
+const LOWER_MASK = parseInt([...Array(W - R)].map(() => '0').reduce((x, y) => x + y).concat([...Array(R)].map(() => '1').reduce((x, y) => x + y), ''), 2)
 
+const mulUint32 = (a: number, b: number): number => {
+  const a1 = a >>> 16, a2 = a & 0xffff;
+  const b1 = b >>> 16, b2 = b & 0xffff;
+  return (((a1 * b2 + a2 * b1) << 16) + a2 * b2) >>> 0;
+}
 export type RandGen = {
   i: number;
   x: number[];
 }
 
 export const newRandGen = (seed: number): RandGen => {
-  let state: RandGen = {i: 0, x: [seed & WHOLE_MASK]}
+  let state: RandGen = {i: 0, x: [seed >>> 0]}
   for (let j = 1; j < N; j++){
-    state.x[j] = (1812433253 * (state.x[j-1] ^ (state.x[j-1] >> 30)) + j) & WHOLE_MASK
+    state.x[j] = (mulUint32(1812433253, state.x[j-1] ^ (state.x[j-1] >>> 30)) + j)
   }
   return state
 }
@@ -41,16 +45,16 @@ export const newRandGen = (seed: number): RandGen => {
 export const randNext = (state: RandGen): [number, RandGen] => {
   const newi = (state.i + 1) % N
   const z = state.x[state.i] & UPPER_MASK | state.x[newi] & LOWER_MASK
-  const newx = [...state.x, state.x[(state.i + M) % N] ^ (z >> 1) ^ ((z & 1) == 0 ? 0 : A)]
+  const newx = [...state.x, state.x[(state.i + M) % N] ^ (z >>> 1) ^ ((z & 1) == 0 ? 0 : A)]
   const newState: RandGen = {i: newi, x:newx}
 
   let y = newState.x[newState.i]
-  y = y ^ (y >> U)
+  y = y ^ (y >>> U)
   y = y ^ ((y << S) & B)
   y = y ^ ((y << T) & C)
-  y = y ^ (y >> L)
+  y = y ^ (y >>> L)
 
-  return [y, newState]
+  return [y >>> 0, newState]
 }
 
 export const randRange = (min: number, sup: number, state: RandGen): [number, RandGen] => {
