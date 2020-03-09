@@ -8,6 +8,9 @@ Mersenne Twister in JavaScript based on "mt19937ar.c"
  * Original C version by Makoto Matsumoto and Takuji Nishimura
    http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/mt.html
 
+Copyright (C) 1997 - 2002, Makoto Matsumoto and Takuji Nishimura,
+All rights reserved.
+
 */
 const W = 32
 const N = 624
@@ -57,14 +60,15 @@ export const randNext = (state: RandGen): [number, RandGen] => {
   return [y >>> 0, newState]
 }
 
-export const randRange = (min: number, sup: number, state: RandGen): [number, RandGen] => {
+export const randRange = (min: number, sup_: number, state: RandGen): [number, RandGen] => {
+  const sup = sup_ - min
   if (!(0 < sup && sup < 0x100000000)){
     const [n, newState] = randNext(state)
     return [n + min, newState]
   }
   if ((sup & (~sup + 1)) == sup){
     const [n, newState] = randNext(state)
-    return [(sup - 1) & n + 1, newState]
+    return [((sup - 1) & n) + min, newState]
   }
   let [n, newState] = randNext(state)
   while(sup > 4294967296 - (n - (n %= sup))){
